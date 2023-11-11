@@ -12,8 +12,12 @@ const handler = nc()
             const usuario = req.body as respostaCadastro;
             console.log(usuario);
 
-            if(await validarEmail(usuario.email,req)){
-                return res.status(400).json({error : "O e-mail fornecido não é válido ou já existe."});
+            if(validarEmail(usuario.email)){
+                return res.status(400).json({error : "O e-mail fornecido não é válido."});
+            }
+            console.log('Email a ser validado:', usuario.email);
+            if(await validarEmailExistente(usuario.email, req) == false){
+                return res.status(400).json({error : "O e-mail fornecido já exite!"});
             }
 
             if(!validarSenha(usuario.senha)){
@@ -38,17 +42,23 @@ const handler = nc()
         
     });
 
-async function validarEmail(email: string, req : NextApiRequest){
+function validarEmail(email: string){
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValido = regexEmail.test(email);
 
-    const usuario = req.body as respostaCadastro;
-    const usuariosComMesmoEmail = await UserModel.find({email : usuario.email});
-
-
-    if (!email || email.trim() === "" || emailValido && !usuariosComMesmoEmail) {
+    if (!email || email.trim() === "" || emailValido) {
         return false;
     } 
+    return true;
+}
+
+async function validarEmailExistente(email: string, req: NextApiRequest) {
+    const usuario = req.body as respostaCadastro;
+    const usuariosComMesmoEmail = await UserModel.find({ email: usuario.email });
+  
+    if (usuariosComMesmoEmail.length > 0) {
+      return false;
+    }  
     return true;
 }
 
