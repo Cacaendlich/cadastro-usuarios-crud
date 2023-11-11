@@ -10,13 +10,11 @@ const handler = nc()
     .post(async (req : NextApiRequest, res: NextApiResponse<respostaPadrao>) =>{
         try {
             const usuario = req.body as respostaCadastro;
-        
-            if(!validarEmail(usuario.email)){
-                return res.status(400).json({error : "O e-mail fornecido não é válido."});
+            console.log(usuario);
+
+            if(await validarEmail(usuario.email,req)){
+                return res.status(400).json({error : "O e-mail fornecido não é válido ou já existe."});
             }
-
-            // const usuariosComMesmoEmail = await UserModel.find({email : usuario.email});
-
 
             if(!validarSenha(usuario.senha)){
                 return res.status(400).json({error : "A senha fornecida não é válida, ela precisa ter pelo menos 4 caracteres."});
@@ -40,16 +38,20 @@ const handler = nc()
         
     });
 
-async function validarEmail(email: string){
-
-    if (!email || email.trim() === "") {
-        return false;
-    }
-
+async function validarEmail(email: string, req : NextApiRequest){
     const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailValido = regexEmail.test(email);
 
-    return regexEmail.test(email);
+    const usuario = req.body as respostaCadastro;
+    const usuariosComMesmoEmail = await UserModel.find({email : usuario.email});
+
+
+    if (!email || email.trim() === "" || emailValido && !usuariosComMesmoEmail) {
+        return false;
+    } 
+    return true;
 }
+
 function validarSenha(senha: string){
     if (!senha || senha.trim() === "") {
         return false;
