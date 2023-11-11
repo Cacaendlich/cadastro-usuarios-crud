@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-payloader": "^1.0.1",
     "md5": "^2.3.0",
     "mongodb": "^6.2.0",
     "mongoose": "^8.0.0",
