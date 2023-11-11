@@ -9,15 +9,16 @@ export const connectMongoDB = ( handler : NextApiHandler ) => async ( req : Next
             return handler(req, res);
         }
 
-        const { CONNECT_STRING } = process.env;
-        if(!CONNECT_STRING){
+        const { CONNECTION_STRING } = process.env;
+        if(!CONNECTION_STRING){
+            console.log(CONNECTION_STRING);
             return res.status(500).json({ error : "Oops! Parece que a string de conexão não foi encontrada. Por favor, verifique as configurações e tente novamente."});
         }
 
         mongoose.connection.on('connected', () => console.log('Banco de dados CONECTADO!'));  
         mongoose.connection.on('error', error => console.log(`ERRO ao conectar banco de dados. ${error}`));
 
-        await mongoose.connect(CONNECT_STRING);
+        await mongoose.connect(CONNECTION_STRING);
 
         return handler(req,res);
 
