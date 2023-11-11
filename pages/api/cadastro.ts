@@ -69,7 +69,4 @@ function validarSenha(senha: string){
     const regexSenha = /^.{4,}$/;
     return regexSenha.test(senha);
 }
-
-
-
 export default connectMongoDB(handler);
