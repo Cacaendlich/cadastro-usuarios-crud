@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UserModel } from "@/models/UsersModel";
 import { connectMongoDB } from "@/middlewares/connectMongoDB";
+import { politicaCORS } from "@/middlewares/politicaCORS";
 import { respostaPadrao } from "@/types/respostaPadrao";
 import { respostaCadastro } from "@/types/respostaCadastro";
 import md5 from "md5";
@@ -69,4 +70,4 @@ function validarSenha(senha: string){
     const regexSenha = /^.{4,}$/;
     return regexSenha.test(senha);
 }
-export default connectMongoDB(handler);
+export default politicaCORS(connectMongoDB(handler));
