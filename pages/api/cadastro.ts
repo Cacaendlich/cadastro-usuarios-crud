@@ -11,12 +11,11 @@ const handler = nc()
     .post(async (req : NextApiRequest, res: NextApiResponse<respostaPadrao>) =>{
         try {
             const usuario = req.body as respostaCadastro;
-            console.log(usuario);
 
             if(validarEmail(usuario.email)){
                 return res.status(400).json({error : "O e-mail fornecido não é válido."});
             }
-            console.log('Email a ser validado:', usuario.email);
+            
             if(await validarEmailExistente(usuario.email, req) == false){
                 return res.status(400).json({error : "O e-mail fornecido já exite!"});
             }

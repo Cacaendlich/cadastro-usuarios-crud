@@ -11,7 +11,6 @@ export const connectMongoDB = ( handler : NextApiHandler ) => async ( req : Next
 
         const { CONNECTION_STRING } = process.env;
         if(!CONNECTION_STRING){
-            console.log(CONNECTION_STRING);
             return res.status(500).json({ error : "Oops! Parece que a string de conexão não foi encontrada. Por favor, verifique as configurações e tente novamente."});
         }
 
