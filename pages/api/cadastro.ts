@@ -12,6 +12,10 @@ const handler = nc()
         try {
             const usuario = req.body as respostaCadastro;
 
+            if(!validarNome(usuario.nome)){
+                return res.status(400).json({error : "O nome fornecida não é válido, ele precisa ter pelo menos 3 caracteres."});
+            }
+
             if(validarEmail(usuario.email)){
                 return res.status(400).json({error : "O e-mail fornecido não é válido."});
             }
@@ -25,6 +29,7 @@ const handler = nc()
             }
 
             const usuarioCadastrando = {
+                nome: usuario.nome,
                 email: usuario.email,
                 senha : md5(usuario.senha)
             }
@@ -68,5 +73,13 @@ function validarSenha(senha: string){
     }
     const regexSenha = /^.{4,}$/;
     return regexSenha.test(senha);
+}
+
+function validarNome(nome: string){
+    if (!nome || nome.trim() === "") {
+        return false;
+    }
+    const regexSenha = /^.{3,}$/;
+    return regexSenha.test(nome);
 }
 export default politicaCORS(connectMongoDB(handler));
