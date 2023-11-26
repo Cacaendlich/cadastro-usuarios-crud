@@ -1,4 +1,4 @@
-export type respostaCadastro = {
+export type requisicaoCadastro = {
     nome : string,
     email : string,
     senha : string,
