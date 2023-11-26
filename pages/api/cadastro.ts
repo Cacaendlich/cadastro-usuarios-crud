@@ -3,14 +3,14 @@ import { UserModel } from "@/models/UsersModel";
 import { connectMongoDB } from "@/middlewares/connectMongoDB";
 import { politicaCORS } from "@/middlewares/politicaCORS";
 import { respostaPadrao } from "@/types/respostaPadrao";
-import { respostaCadastro } from "@/types/respostaCadastro";
+import { requisicaoCadastro } from "@/types/requisicaoCadastro";
 import md5 from "md5";
 import nc from "next-connect";
 
 const handler = nc()
     .post(async (req : NextApiRequest, res: NextApiResponse<respostaPadrao>) =>{
         try {
-            const usuario = req.body as respostaCadastro;
+            const usuario = req.body as requisicaoCadastro;
 
             if(!validarNome(usuario.nome)){
                 return res.status(400).json({error : "O nome fornecida não é válido, ele precisa ter pelo menos 3 caracteres."});
@@ -58,7 +58,7 @@ function validarEmail(email: string){
 }
 
 async function validarEmailExistente(email: string, req: NextApiRequest) {
-    const usuario = req.body as respostaCadastro;
+    const usuario = req.body as requisicaoCadastro;
     const usuariosComMesmoEmail = await UserModel.find({ email: usuario.email });
   
     if (usuariosComMesmoEmail.length > 0) {
