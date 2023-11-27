@@ -16,13 +16,21 @@ const handler = nc()
                 res.status(500).json({ error : "Chave privada do JWT não encontrada. Certifique-se de configurar a variável de ambiente JWT_PRIVATE_KEY corretamente."})
             }
             const { login, senha } = req.body;
+            
             const senhaCriptografada = md5(senha);
+
             const usuarioEncontrado = await UserModel.findOne({email: login, senha: senhaCriptografada})
 
-            if(usuarioEncontrado){
-                const tokenDeResposta = jwt.sign({_id : usuarioEncontrado._id}, JWT_PRIVATE_KEY!);
-                return res.status(200).json({nome: usuarioEncontrado.nome, email: usuarioEncontrado.email, token : tokenDeResposta});
+            console.log(usuarioEncontrado);
+
+            if(!usuarioEncontrado){
+                return res.status(500).json({error : "email não cadastrado!"});  
             }
+
+            const tokenDeResposta = jwt.sign({_id : usuarioEncontrado._id}, JWT_PRIVATE_KEY!);
+
+            return res.status(200).json({nome: usuarioEncontrado.nome, email: usuarioEncontrado.email, token : tokenDeResposta});
+
         } catch (error) {
             console.log(error);
             return res.status(500).json({error : "Oops! Erro ao tentar fazer Login!"});
