@@ -27,6 +27,10 @@ const handler = nc()
                 return res.status(500).json({error : "email não cadastrado!"});  
             }
 
+            if (senha !== usuarioEncontrado.senha) {
+                return res.status(500).json({error: "Senha incorreta!"});
+            }
+
             const tokenDeResposta = jwt.sign({_id : usuarioEncontrado._id}, JWT_PRIVATE_KEY!);
 
             return res.status(200).json({nome: usuarioEncontrado.nome, email: usuarioEncontrado.email, token : tokenDeResposta});
@@ -36,4 +40,5 @@ const handler = nc()
             return res.status(500).json({error : "Oops! Erro ao tentar fazer Login!"});
         }
     })
+
 export default politicaCORS(connectMongoDB(handler));
